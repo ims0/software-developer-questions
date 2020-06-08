@@ -1,0 +1,64 @@
+body {
+  background: #262624 url(../img/login_bj.png);
+  background-size: 100%; }
+  body .logo {
+    width: 80px;
+    margin: 50px auto; }
+    body .logo img {
+      width: 100%; }
+  body .from {
+    width: 80%;
+    margin: 0 auto; }
+    body .from .input_dv {
+      position: relative;
+      margin-top: 20px;
+      border-bottom: 1px solid #656565; }
+      body .from .input_dv input {
+        color: #fff;
+        height: 40px;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0);
+        border: none;
+        outline: none;
+        letter-spacing: 5px; }
+      body .from .input_dv .biyan, body .from .input_dv .liulan {
+        width: 30px;
+        position: absolute;
+        right: 0;
+        bottom: 5px; }
+        body .from .input_dv .biyan img, body .from .input_dv .liulan img {
+          width: 100%; }
+    body .from .wanji {
+      float: right; }
+      body .from .wanji a {
+        line-height: 40px;
+        color: #009900; }
+    body .from .liji_denlu {
+      width: 100%;
+      margin-top: 100px;
+      line-height: 40px;
+      text-align: center;
+      color: #fff;
+      font-size: 16px;
+      background-color: #009900;
+      border-radius: 20px; }
+    body .from .zhuche {
+      color: #8d8986;
+      text-align: center;
+      line-height: 50px; }
+      body .from .zhuche a {
+        color: #fb371f; }
+
+@media screen and (min-width: 1024px) {
+  body .from {
+    width: 80%;
+    margin: 0 auto;
+    width: 320px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 5px; }
+  body .from .input_dv {
+    margin-top: 35px; }
+  body .from .liji_denlu {
+    margin-top: 60px;
+    cursor: pointer; } }

@@ -1,0 +1,21 @@
+//引入jquery
+document.write("<script src='/member//vendor/jquery/jquery-3.3.1.min.js'></script>");
+
+//引入弹窗插件
+document.write("<script src='/member/vendor/layer/layer.js'></script>");
+
+
+//引入common.js
+//document.write("<script src='/member/js/common.js?v=1.2'></script>");
+
+var timestamp_num = Date.parse(new Date());
+//引入common.js
+document.write(` <script src="/member/js/common.js?v=${timestamp_num}"><\/script> `);
+
+//引入h5调试
+//document.write("<script type='text/javascript' src='//cdn.jsdelivr.net/npm/eruda'></script>");
+//document.write("<script>eruda.init();</script>");
+
+        
+//var Version_number  = 1 ;       //版本号更改 ---全局变量
+ 

@@ -1,0 +1,108 @@
+
+$(function(){
+    
+    //密码的显示与隐藏
+    $(".biyan").click(function(){
+        show_pass()  //显示
+    })
+    $(".liulan").click(function(){
+        hide_pass()  //隐藏
+    })
+    
+    //获取验证码
+    $(".time").click(function(){
+        //验证手机号码
+        var phone = $(".input_phone  input").val()
+        //发送请求--获取验证码
+        if( judge_phone(phone) ){
+            //获取验证码的时间 如果不为60不可以获取验证码
+            var time_s = $(".miao").text()
+            //调用公共方法获取验证码
+            post_verifyCode(time_s,phone,getVerifyCodeForReg)
+
+        }
+    })
+    
+    //注册
+    $(".liji_zhuce").click(function(){
+        //验证手机号码
+        var phone = $(".input_phone  input").val()
+        if(!judge_phone(phone)){
+            return false ;
+        }
+        
+        //验证-验证码
+        var verifyCode = $(".input_yan input").val();  //验证码 
+        
+        if(judge_verifyCode(verifyCode)){
+            return false ;
+        }
+        
+        //验证-密码  6-16位数
+        var password = $(".mima  input").val()
+        if(!judge_password(password)){
+            return false ;
+        }
+
+        //邀请码  
+        var popularizeCode = $(".yaoqingma   input").val()
+        layer.open({
+            type: 2
+            ,content: '提交中...'
+       });
+        
+        //发送注册请求
+        $.ajax({
+            url:register,
+            type:'POST',
+            dataType:'json',
+            data:{
+                'phone' : phone,
+                'verifyCode' : verifyCode,
+                'password' : password,
+                'popularizeCode' : popularizeCode,
+                'deviceId' : phone,
+                'plat':plat
+            },
+//          beforeSend: function() {
+//	        	if(loding !=false ){
+//	        		layer.open({
+//			            type: 2,
+//			            content: '提交中...'
+//			       });
+//	        	}
+//		    },
+//		    complete:function(data){ 
+//		    	if(layerIndex != null){
+//		    		layer.close(layerIndex);
+//		    	}
+//	              
+//	        }, 
+            success:function(data){
+                layer.closeAll()
+                if(data.status_code == 200){ 
+                    layer_tc("注册成功",style_layer,time_layer);
+                    setTimeout(function(){ window.location.href="/member/h5/login.html"; }, 1500);
+                    //location.href = "/member/h5/login.html";
+                    /*if (localStorage.getItem('device') == 'pc') {
+                        window.open("/member");       
+                        setTimeout(function(){
+                            window.close();    
+                        }, 500);                    
+                    } else {
+                        location.href = "/member/h5/login.html";
+                    }*/
+                } else {
+                    layer_tc(data.message,style_layer,time_layer)                    
+                }
+            },
+            error:function(err){
+                layer.closeAll()
+                //console.log(err)
+            }
+        })
+    })
+    
+    
+    
+})

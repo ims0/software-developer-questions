@@ -1,0 +1,419 @@
+var plat = 4         //设备码
+var users = null
+var token = null     //token
+var style_layer = 'background-color:#09C1FF; color:#fff; border:none;;max-width:300px;'   //弹窗自定义样式
+//var style_layer = 'background-color:rgba(0,0,0,0.5); color:#fff; border:none;max-width:300px;'   //弹窗自定义样式
+var time_layer  = 3
+var two = true    //如果是二次加载  --不用 提示正在加载中
+
+var Version_number  = 3 ;       //版本号更改 ---全局变量
+
+//判断终端
+	var u = navigator.userAgent;
+	var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1;        //android终端 
+	var isiOS = u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);                      //ios
+	var isH5 = /Android|webOS|iPhone|iPod|BlackBerry/i.test(u)                 //H5
+	var isPc = !isH5                                                           //pc
+
+function deviceCheck () {
+	var cw =  document.documentElement.clientWidth || document.body.clientWidth;
+
+	if (cw > 768) {
+		isPc = true;
+		localStorage.setItem('device', 'pc');
+	} else if (localStorage.getItem('device') == 'android') {
+		localStorage.setItem('device', 'android');
+    	$(".header_all").hide();
+    	plat = 3 ;
+	} else {
+		isPc = false;
+		localStorage.setItem('device', 'h5');
+		plat = 3 ;
+	}
+}
+window.onresize = function(){
+	deviceCheck()
+}
+
+//接口封装 http://dev.tom054.com/api/
+//var BaseUrl="//dannie-tom-dev.yulongwork.com/api";//数据库接口
+//var BaseUrl="//a6.com/api";//数据库接口
+//var BaseUrl="https://test.071tom.com/api";//数据库接口
+var BaseUrl="https://api.142tom.com/api";
+
+//1.登录接口    
+var login=BaseUrl+"/login";
+
+//2.注册接口   
+var register=BaseUrl+"/register";
+
+//3.获取注册验证码接口  
+var getVerifyCodeForReg = BaseUrl+"/getVerifyCodeForReg";
+
+//4.重置密码获取验证码接口 
+var getVerifyCodeForPwdReset = BaseUrl+"/getVerifyCodeForPwdReset";
+
+//5.重置密码接口  
+var pwdReset = BaseUrl+"/pwdReset";
+
+//6.个人信息获取—{携带token后访问}
+var getMemberInfo = BaseUrl+"/member/getMemberInfo";
+
+//7.土豪排行榜—需要携带token
+var getLeaderboard = BaseUrl+"/member/getLeaderboard";
+
+//7.视频表单数据提交
+var release = BaseUrl+"/movie/release";
+
+//8。昵称修改—{携带token后访问}
+var setNickname = BaseUrl+"/member/setNickname";  
+
+//9.收货地址修改—{携带token后访问}
+var setsaveurl = BaseUrl+"/address/save";  
+
+//10.收货地址修改—{携带token后访问}
+var setAvatar = BaseUrl+"/member/setAvatar";  
+
+//11.退出登录—{携带token后访问}
+var logout = BaseUrl+"/logout";  
+
+//12.签到接口—需要携带token
+var setCheck = BaseUrl+"/member/setCheck"  ;
+
+//13.获取用户当前等级—v1.1
+var getMemberPopularizeLevel = BaseUrl+"/popularize/getMemberPopularizeLevel"  ;
+
+//14.「我的推广」获取接口—{携带token访问}
+var getMyPopularizeMember = BaseUrl+"/member/getMyPopularizeMember"  ;
+
+//15.获取商品列表
+var giftsList = BaseUrl+"/giftsList"  ;
+
+//16.获取商品详情
+var giftsDetails = BaseUrl+"/giftsDetails"  ;
+
+//17.商品购买
+var giftsExchange = BaseUrl+"/giftsExchange"  ;   
+
+//18.获取会员兑换券（v2）
+var userBoxsList = BaseUrl+"/userBoxsList"  ;   
+
+//19.获取VIP购买券（v2）
+var getPurchases = BaseUrl+"/getPurchases"  ;   
+
+//20.购买VIP（v2）
+var vipPurchases = BaseUrl+"/vipPurchases"  ;  
+
+
+//21.兑换卡包里的卡券
+var boxsExchange = BaseUrl+"/boxsExchange"  ; 
+
+//22.获取会员VIP时间
+var getVipDays = BaseUrl+"/getVipDays"  ; 
+
+//23.获取金币变动数据
+var ordersList = BaseUrl+"/ordersList"  ; 
+
+//24.会员抽奖
+var luckStart = BaseUrl+"/luckStart"  ;
+
+//25.中奖列表
+var userBoxsList = BaseUrl+"/userBoxsList"  ;
+
+//26.BC平台订单兑换
+var BcCdkey = BaseUrl+"/cdkey/check"  ;
+
+//27.获取抽奖规则
+var getPrizeRule = BaseUrl+"/getPrizeRule"  ;
+
+//28.pc--修改个人信息
+var UpUserInfoRess = BaseUrl+"/UpUserInfoRess"  ;
+
+//29.upload--投稿
+var uploadTougao = BaseUrl+"/movie/upload"  ;
+
+//30.获取所有标签信息
+var getTagsInfo = BaseUrl+"/tag/getTagsInfo"  ;
+
+//31.获取推广任务
+var getPopularizeTasks = BaseUrl+"/popularize/getPopularizeTasks"  ;
+
+//32.获取视频单价
+var get_price = BaseUrl+"/movie/get_price"  ;
+
+//33.解锁视频
+var get_video_buy = BaseUrl+"/movie/buy"  ;
+
+//34.金币兑换渠道列表
+var get_channellist = BaseUrl+"/cdkey/channellist"  ;
+
+//35.获取BC平台内部渠道
+var BcCdkeyRid = BaseUrl+"/cdkey/getRid"  ;
+
+//------------------------------------------------------------------
+//var BaseUrl1 = 'https://xingtong-tom-dev.yulongwork.com/api'
+//var BaseUrl="https://006tom.com/api";
+
+//1.获取直播首页列表的数据    
+var roomlist = BaseUrl+"/live/roomlist";
+
+//获取直播间链接详情
+var roominfo = BaseUrl+'/live/roominfo';
+
+//广告--直播首页列表--广告数据
+var adlist = BaseUrl+'/live/adlist';
+
+//返回上一页      
+$(document).on("click", ".header_all span",function(){
+	window.history.go(-1)
+	
+})
+
+
+
+//封装--判断是否登录
+function is_login(){
+	if (getQueryString('accessToken')) { // 安卓app调用
+		var userInfo = {};
+		token = getQueryString('accessToken');
+		var reward_money = getQueryString('reward_money');
+		userInfo.reward_money = reward_money;
+		userInfo.token = token;
+        localStorage.setItem("token",token);
+        localStorage.setItem("users",JSON.stringify(userInfo));
+        localStorage.setItem("device", 'android');
+		users = JSON.parse(localStorage.getItem("users"))
+		token = localStorage.getItem("token")
+	} else { // 正常使用
+		users = JSON.parse(localStorage.getItem("users"))
+		token = localStorage.getItem("token")
+
+		if(token == null){
+			layer_tc("登录已过期，请重新登录!",style_layer,3)
+			//window.location.href = "../h5/login.html"
+			setTimeout(function(){ window.location.href = "/member/h5/login.html"; }, 3000);
+			return false
+		} else {
+			return true
+		}		
+	}
+	
+}
+
+//封装--验证手机号码的方法
+function judge_phone(phone){
+	var reg = /^1[3456789]\d{9}$/;               //手机号码的正则匹配式
+	if(phone.length <= 0){
+		layer_tc("手机号码为空，请输入手机号码!",style_layer,time_layer)
+		return false;
+	}else if(!reg.test(phone)){
+        $(".input_phone input").val("")
+		layer_tc("请输入正确的手机号码!",style_layer,time_layer)
+		return false;
+	}else {
+		return true;
+	}
+}
+
+//封装--验证_密码的方法
+function judge_password(pass){
+	if(pass.length < 6 || pass.length > 16 ){
+		layer_tc("请输入正确的密码!",style_layer,time_layer)
+		return false;
+	}else{
+		return true;
+	}
+}
+
+//封装--验证_验证码的方法
+function judge_verifyCode(Code){
+	var ytextReg = /^[0-9]{4}$/;                //验证码的正则匹配
+	if(!ytextReg.test(Code)){
+		layer_tc("请输入正确的验证码!",style_layer,time_layer)
+		return false;
+	}
+}
+
+//封装--获取验证码
+function post_verifyCode(time_s,phone,url){
+	if(time_s != 60 ){
+		layer_tc("请求太频繁，请60s后再重新获取!",style_layer,time_layer)
+		return false;
+	}else if(time_s == 60){
+		//定时器
+        settime = setInterval(function(){
+			var miao = $(".miao").text()
+			if(miao == 0 ){
+				clearInterval(settime)
+				$(".yan_text").text("重新获取验证码(")
+				$(".miao").text(60)
+				return false;
+			}else{
+				miao --;
+				$(".miao").text(miao)
+			}
+		}, 1000);
+		
+		//发送请求 获取验证码
+		$.ajax({
+			url:url,
+			type:'POST',
+			dataType:'json',
+			data:{
+				'plat': plat,
+				'phone' : phone,
+			},
+			success:function(data){
+				////console.log(data)
+				if(data.status_code == 200){
+					layer_tc("验证码已发送！",style_layer,time_layer) 
+				}else{
+					layer_tc(data.message,style_layer,time_layer) 
+				}
+			},
+			error:function(err){
+				////console.log(err)
+			}
+		})
+	}
+}
+
+//点击隐藏密码按钮
+function show_pass(){
+	$(".biyan").addClass("yc")
+	$(".liulan").removeClass("yc")
+	$(".mima input").attr('type','text');
+}
+
+//点击隐藏密码按钮{
+function hide_pass(){
+	$(".liulan").addClass("yc")
+	$(".biyan").removeClass("yc")
+	$(".mima input").attr('type','password');
+}
+
+//弹窗插件
+//function layer_tc(nr,style,time){
+	//layer.open({
+	//	shadeClose: false,
+	//	content: nr,
+		//style: 'background-color:#09C1FF; color:#fff; border:none;', //自定风格
+		//style: style, //自定风格
+		//time: time
+	//});
+//}
+function layer_tc(nr,style,time){
+	layer.open({
+		shadeClose: false,
+        skin: 'msg',
+		content: nr,
+		//style: 'background-color:#09C1FF; color:#fff; border:none;', //自定风格
+		//style: style, //自定风格
+		time: time
+	});
+}
+
+
+
+
+function layer_tc2(loding = '加载中。。。'){
+	layer.open({
+	    type: 2,
+	    content: loding
+	  });
+	  return true;
+}
+
+// 获取url参数
+function getQueryString(name){
+	var urlParams = location.search.substr(1).split('&');
+	for (var i = 0; i < urlParams.length; i++) {
+		if(name == urlParams[i].split('=')[0]){
+			return decodeURI(urlParams[i].split('=')[1]);
+		}
+	}
+}
+
+//二次封装的 $.ajax
+//数据
+var source = {
+    url: "",
+    type:'POST',
+    dataType:'json',
+    processData: true,
+	contentType: 'application/x-www-form-urlencoded',
+	cache: true,
+    async:true,
+    data: {
+        'plat': plat,
+    }
+};
+
+//访问失败的回调函数
+function errorfn(err){
+    ////console.log(err.status);
+	////console.log(err.statusText);
+}
+
+/**
+ *  @param source 数据
+ *  @param successHandle 访问成功的回调函数
+ *  @param errorHandle 访问失败回调函数
+ **/
+ postFun=function(source, successfn, errorfn,loding='正在加载。。',from=false) {
+    var layerIndex = null
+    if(from == true){
+    	source['processData'] = false
+		source['contentType'] = false
+		source['cache'] = false
+    }
+	$.ajax({
+        url: source['url'],
+        type: source['type'],
+        data:source['data'],
+        dataType: source['dataType'],
+        processData: source['processData'],
+		contentType: source['contentType'],
+		cache: source['cache'],
+        async: source['async'],
+        headers: {
+	        'authorization': token
+	    },
+        beforeSend: function() {
+        	if(loding !=false ){
+        		layerIndex = layer.open({
+				    type: 2,
+				    content: loding,
+				});
+        	}
+	    },
+	    complete:function(data){ 
+	    	if(layerIndex != null){
+	    		layer.close(layerIndex);
+	    	}
+              
+        },  
+       
+        success: function(d){
+        	if(layerIndex != null){
+	    		layer.close(layerIndex);
+	    	}
+        	if(d.status_code == 0 ){
+        		
+        		layer_tc('登录失效，请重新登录！',style_layer,time_layer)
+        		setTimeout(function(){ window.location.href = "/member/h5/login.html"; }, 3000);
+        	}else{
+        		successfn(d);
+        	}
+            
+        },
+        error: function(e){
+        	
+            errorfn(e);
+            if(layerIndex != null){
+	    		layer.close(layerIndex);
+	    	}
+        }
+    });
+};
+ 
